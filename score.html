@@ -80,7 +80,7 @@
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    padding-bottom: 5.2rem;
+    padding-top: 3.2rem;
   }
   .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
   a { color: inherit; }
@@ -220,12 +220,12 @@
 
   /* ---------- Sticky total bar ---------- */
   .sticky-bar {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    position: fixed; left: 0; right: 0; top: 0; z-index: 50;
     background: linear-gradient(165deg, var(--navy-900) 0%, var(--navy-950) 100%);
     color: #EEF2FF;
-    padding: 0.75rem 1.2rem;
+    padding: 0.6rem 1.2rem;
     display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
-    box-shadow: 0 -8px 24px -12px rgba(11,21,48,0.4);
+    box-shadow: 0 8px 24px -12px rgba(11,21,48,0.4);
   }
   .bar-label { font-size: 0.72rem; color: #B7C3E6; }
   .bar-total { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
@@ -241,7 +241,7 @@
   .bar-print:hover { background: rgba(255,255,255,0.18); }
 
   @media print {
-    body { padding-bottom: 0; background: #fff; }
+    body { padding-top: 0; background: #fff; }
     .sticky-bar, .back-link, .toolbar, .score-item-desc summary { display: none !important; }
     .score-item-desc { display: block !important; }
     .score-item-desc p { display: block !important; }
