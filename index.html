@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>PA สมองกลฝังตัว</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --navy-950: #0B1530;
+    --navy-900: #16234A;
+    --navy-700: #2A3A66;
+    --gold-500: #C9A227;
+    --gold-300: #E4CD7C;
+    --ground: #F3F5FB;
+    --surface: #FFFFFF;
+    --surface-2: #EBEFF9;
+    --ink: #16203D;
+    --muted: #5B6B8C;
+    --line: #DDE3F0;
+    --good: #1E7A4C;
+    --good-bg: #E4F5EC;
+    --heading-accent: #16234A;
+    --shadow: 0 1px 2px rgba(11,21,48,0.04), 0 8px 24px -12px rgba(11,21,48,0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --navy-950: #060B1A;
+      --navy-900: #0F1830;
+      --navy-700: #2A3A66;
+      --gold-500: #D9B84A;
+      --gold-300: #EAD68A;
+      --ground: #0A1122;
+      --surface: #11192F;
+      --surface-2: #16214A;
+      --ink: #E7ECFB;
+      --muted: #90A0C8;
+      --line: #253055;
+      --good: #4ADE94;
+      --good-bg: #123324;
+      --heading-accent: #EAD68A;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --navy-950: #060B1A;
+    --navy-900: #0F1830;
+    --navy-700: #2A3A66;
+    --gold-500: #D9B84A;
+    --gold-300: #EAD68A;
+    --ground: #0A1122;
+    --surface: #11192F;
+    --surface-2: #16214A;
+    --ink: #E7ECFB;
+    --muted: #90A0C8;
+    --line: #253055;
+    --good: #4ADE94;
+    --good-bg: #123324;
+    --heading-accent: #EAD68A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: 'Sarabun', 'TH SarabunPSK', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+
+  a { color: inherit; }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 0 4rem; }
+
+  /* ---------- Header ---------- */
+  .head {
+    background: linear-gradient(165deg, var(--navy-900) 0%, var(--navy-950) 100%);
+    color: #EEF2FF;
+    padding: 2.6rem 1.5rem 2.2rem;
+    border-radius: 0 0 28px 28px;
+    box-shadow: var(--shadow);
+  }
+  .head-inner { max-width: 720px; margin: 0 auto; }
+  .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-300);
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+  }
+  .head h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 0.5rem;
+    text-wrap: balance;
+  }
+  .head .sub {
+    color: #C7D2EE;
+    font-size: 0.98rem;
+    margin: 0 0 1.4rem;
+  }
+  .id-card {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 0.9rem 1.1rem;
+  }
+  .id-avatar {
+    width: 44px; height: 44px; flex: none;
+    border-radius: 50%;
+    background: var(--gold-500);
+    color: var(--navy-950);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1.1rem;
+  }
+  .id-name { font-weight: 600; font-size: 1rem; }
+  .id-role { color: #B7C3E6; font-size: 0.86rem; margin-top: 0.15rem; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 2.2rem 1.5rem 0; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+  h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--heading-accent);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+  }
+  h2 .num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--gold-500); font-weight: 600; }
+  p { margin: 0 0 0.8rem; }
+  .lede { color: var(--muted); font-size: 0.95rem; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 1.3rem 1.4rem;
+    box-shadow: var(--shadow);
+  }
+
+  /* Challenge quote */
+  .quote {
+    font-size: 1.08rem;
+    font-weight: 500;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+  .quote-mark { color: var(--gold-500); font-size: 1.4em; line-height: 0; position: relative; top: 0.18em; }
+
+  /* PDCA */
+  .pdca { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.7rem; }
+  @media (max-width: 560px) { .pdca { grid-template-columns: repeat(2, 1fr); } }
+  .pdca-step {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1rem 0.8rem;
+    text-align: center;
+  }
+  .pdca-step.active { background: var(--navy-900); border-color: var(--navy-900); color: #EEF2FF; }
+  .pdca-letter {
+    width: 34px; height: 34px; margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    background: var(--gold-500);
+    color: var(--navy-950);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-family: 'JetBrains Mono', monospace;
+  }
+  .pdca-title { font-weight: 600; font-size: 0.88rem; margin-bottom: 0.2rem; }
+  .pdca-date { font-size: 0.72rem; color: var(--muted); }
+  .pdca-step.active .pdca-date { color: var(--gold-300); }
+
+  /* Areas */
+  .area-list { display: flex; flex-direction: column; gap: 0.8rem; }
+  .area {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+  }
+  .area-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem; }
+  .area-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gold-500);
+    background: color-mix(in srgb, var(--gold-500) 14%, transparent);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+  }
+  .area-name { font-weight: 600; font-size: 0.98rem; }
+  .area-detail { color: var(--muted); font-size: 0.9rem; }
+
+  /* Stats */
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+  @media (max-width: 560px) { .stat-grid { grid-template-columns: 1fr; } }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.1rem 1rem;
+  }
+  .stat-label { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.6rem; }
+  .stat-nums { display: flex; align-items: baseline; gap: 0.4rem; }
+  .stat-before { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+  .stat-arrow { color: var(--gold-500); }
+  .stat-after { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: var(--heading-accent); }
+  .stat-delta { display: inline-block; margin-top: 0.5rem; font-size: 0.76rem; font-weight: 600; color: var(--good); background: var(--good-bg); padding: 0.15rem 0.5rem; border-radius: 999px; }
+
+  /* Scoring table */
+  .score-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .score-table th, .score-table td { text-align: left; padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--line); }
+  .score-table th { color: var(--muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .score-table td.pts { font-family: 'JetBrains Mono', monospace; font-weight: 600; text-align: right; color: var(--heading-accent); white-space: nowrap; }
+  .score-table tr:last-child td { border-bottom: none; }
+  .table-scroll { overflow-x: auto; }
+  .criteria-note { margin-top: 0.9rem; font-size: 0.86rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 0.9rem; }
+
+  /* Documents */
+  .doc-list { display: flex; flex-direction: column; gap: 0.6rem; }
+  .doc {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .doc:hover { border-color: var(--gold-500); transform: translateX(2px); }
+  .doc:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
+  .doc-icon {
+    width: 40px; height: 40px; flex: none;
+    border-radius: 10px;
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--heading-accent);
+  }
+  .doc-icon svg { width: 20px; height: 20px; }
+  .doc-body { flex: 1; min-width: 0; }
+  .doc-title { font-weight: 600; font-size: 0.94rem; }
+  .doc-desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+  .doc-go { color: var(--muted); flex: none; }
+
+  footer {
+    margin-top: 2.6rem;
+    padding: 1.6rem 1.5rem 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer .sig { margin-top: 0.4rem; font-size: 0.78rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="head-inner">
+      <p class="eyebrow">รายงานผลการพัฒนางานตามข้อตกลง (PA) &middot; ปีงบประมาณ 2569</p>
+      <h1>การริเริ่มพัฒนานวัตกรรมการจัดการเรียนรู้แบบไฮบริด ผ่านแพลตฟอร์ม Discord</h1>
+      <p class="sub">รายวิชา 30105-2002 สมองกลฝังตัว (Embedded System) &middot; ระดับ ปวส.</p>
+      <div class="id-card">
+        <div class="id-avatar">วภ</div>
+        <div>
+          <div class="id-name">นายวีระวัฒน์ ภูสมหมาย</div>
+          <div class="id-role">ครู วิทยฐานะครูชำนาญการพิเศษ (คศ.3) &middot; วิทยาลัยเทคนิคศรีสะเกษ</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section aria-labelledby="challenge-h">
+    <div class="section-head">
+      <h2 id="challenge-h"><span class="num">01</span> ประเด็นท้าทาย</h2>
+    </div>
+    <div class="card">
+      <p class="quote"><span class="quote-mark">&ldquo;</span>การริเริ่มพัฒนานวัตกรรมการจัดการเรียนรู้แบบไฮบริด (Hybrid Learning) ผ่านแพลตฟอร์ม Discord เพื่อส่งเสริมการมีส่วนร่วมในการเรียนรู้ ความพึงพอใจ และการสร้างสังคมการเรียนรู้ดิจิทัล สำหรับนักศึกษาระดับประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)<span class="quote-mark">&rdquo;</span></p>
+      <p class="lede" style="margin-top:0.9rem">นักศึกษาสาขาช่างอิเล็กทรอนิกส์มีข้อจำกัดด้านการติดตามภาระงานนอกเวลาเรียนและการสื่อสารต่อเนื่อง จึงออกแบบ Discord Server เป็นพื้นที่การเรียนรู้ดิจิทัล ประกอบด้วยช่อง Mentor, Debugging และ Repository</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="pdca-h">
+    <div class="section-head">
+      <h2 id="pdca-h"><span class="num">02</span> วิธีดำเนินการ (PDCA)</h2>
+    </div>
+    <div class="pdca">
+      <div class="pdca-step"><div class="pdca-letter">P</div><div class="pdca-title">วางแผน</div><div class="pdca-date">ต.ค.&ndash;ธ.ค. 68</div></div>
+      <div class="pdca-step"><div class="pdca-letter">D</div><div class="pdca-title">ปฏิบัติ</div><div class="pdca-date">ม.ค.&ndash;มี.ค. 69</div></div>
+      <div class="pdca-step"><div class="pdca-letter">C</div><div class="pdca-title">ตรวจสอบ</div><div class="pdca-date">เม.ย.&ndash;ก.ค. 69</div></div>
+      <div class="pdca-step active"><div class="pdca-letter">A</div><div class="pdca-title">ปรับปรุง</div><div class="pdca-date">ส.ค.&ndash;ก.ย. 69</div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="areas-h">
+    <div class="section-head">
+      <h2 id="areas-h"><span class="num">03</span> ผลการดำเนินงาน 3 ด้าน</h2>
+    </div>
+    <div class="area-list">
+      <div class="area">
+        <div class="area-top"><span class="area-tag">ด้านที่ 1</span><span class="area-name">การจัดการเรียนรู้</span></div>
+        <div class="area-detail">นวัตกรรม Hybrid Learning ผ่าน Discord &middot; 8 ตัวชี้วัดย่อย (1.1&ndash;1.8) &middot; นักศึกษาเข้าถึง/มีส่วนร่วมไม่น้อยกว่าร้อยละ 80</div>
+      </div>
+      <div class="area">
+        <div class="area-top"><span class="area-tag">ด้านที่ 2</span><span class="area-name">การส่งเสริมและสนับสนุนการจัดการเรียนรู้</span></div>
+        <div class="area-detail">ระบบสารสนเทศดิจิทัล + ช่อง Mentor/Counseling &middot; 4 ตัวชี้วัดย่อย (2.1&ndash;2.4) &middot; ข้อมูลสารสนเทศครบร้อยละ 100</div>
+      </div>
+      <div class="area">
+        <div class="area-top"><span class="area-tag">ด้านที่ 3</span><span class="area-name">การพัฒนาตนเองและวิชาชีพ</span></div>
+        <div class="area-detail">ผู้นำชุมชนการเรียนรู้ทางวิชาชีพ (PLC) &middot; 3 ตัวชี้วัดย่อย (3.1&ndash;3.3) &middot; วุฒิบัตร/เกียรติบัตรไม่น้อยกว่า 2 รายการ</div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="results-h">
+    <div class="section-head">
+      <h2 id="results-h"><span class="num">04</span> ผลลัพธ์เชิงประจักษ์</h2>
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">การมีส่วนร่วมในการเรียนรู้</div>
+        <div class="stat-nums"><span class="stat-before">60%</span><span class="stat-arrow">&rarr;</span><span class="stat-after">85%</span></div>
+        <span class="stat-delta">+25 จุด</span>
+      </div>
+      <div class="stat">
+        <div class="stat-label">ความพึงพอใจต่อการเรียนรู้</div>
+        <div class="stat-nums"><span class="stat-before">65%</span><span class="stat-arrow">&rarr;</span><span class="stat-after">87%</span></div>
+        <span class="stat-delta">+22 จุด</span>
+      </div>
+      <div class="stat">
+        <div class="stat-label">สมรรถนะการเขียนโปรแกรม</div>
+        <div class="stat-nums"><span class="stat-before">58%</span><span class="stat-arrow">&rarr;</span><span class="stat-after">82%</span></div>
+        <span class="stat-delta">+24 จุด</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="scoring-h">
+    <div class="section-head">
+      <h2 id="scoring-h"><span class="num">05</span> โครงสร้างคะแนนประเมิน (แบบ PA 2)</h2>
+    </div>
+    <div class="card">
+      <div class="table-scroll">
+        <table class="score-table">
+          <thead><tr><th>ส่วน</th><th>รายการ</th><th>คะแนน</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>ข้อตกลงตามมาตรฐานตำแหน่ง (3 ด้าน)</td><td class="pts">60</td></tr>
+            <tr><td>2.1</td><td>วิธีดำเนินการ (ประเด็นท้าทาย)</td><td class="pts">20</td></tr>
+            <tr><td>2.2</td><td>ผลลัพธ์เชิงปริมาณ</td><td class="pts">10</td></tr>
+            <tr><td>2.3</td><td>ผลลัพธ์เชิงคุณภาพ</td><td class="pts">10</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="criteria-note">เกณฑ์ผ่าน: คะแนนจากกรรมการแต่ละคน ไม่ต่ำกว่าร้อยละ 70 &middot; รวมเต็ม 100 คะแนน</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="docs-h">
+    <div class="section-head">
+      <h2 id="docs-h"><span class="num">06</span> เอกสารประกอบการประเมิน</h2>
+    </div>
+    <p class="lede" style="margin-top:-0.3rem">แตะเพื่อเปิดเอกสารฉบับเต็ม (PDF)</p>
+    <div class="doc-list" id="doc-list">
+      <a class="doc" href="docs/pa1.pdf" target="_blank" rel="noopener">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 16.5h6M9 9.5h2"/></svg></div>
+        <div class="doc-body"><div class="doc-title">แบบข้อตกลงในการพัฒนางาน (PA1)</div><div class="doc-desc">ฟอร์มราชการทางการ &middot; PDF</div></div>
+        <div class="doc-go">&rarr;</div>
+      </a>
+      <a class="doc" href="docs/research.pdf" target="_blank" rel="noopener">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M9 8h7M9 11.5h7"/></svg></div>
+        <div class="doc-body"><div class="doc-title">รายงานวิจัยในชั้นเรียน</div><div class="doc-desc">PDCA &middot; Pre/Post &middot; หลักฐานด้านที่ 2&ndash;3 &middot; PDF</div></div>
+        <div class="doc-go">&rarr;</div>
+      </a>
+      <a class="doc" href="docs/syllabus.pdf" target="_blank" rel="noopener">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="4" width="17" height="16" rx="1.5"/><path d="M3.5 9h17M8 4v5"/></svg></div>
+        <div class="doc-body"><div class="doc-title">โครงการสอน 30105-2002</div><div class="doc-desc">หน่วยการเรียนรู้ &middot; ตารางสอนจริง &middot; PDF</div></div>
+        <div class="doc-go">&rarr;</div>
+      </a>
+      <a class="doc" href="docs/lesson-plan.pdf" target="_blank" rel="noopener">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4.5A2.5 2.5 0 016.5 2H18a1 1 0 011 1v17a1 1 0 01-1 1H6.5A2.5 2.5 0 014 18.5v-14z"/><path d="M4 18.5A2.5 2.5 0 016.5 16H19"/></svg></div>
+        <div class="doc-body"><div class="doc-title">แผนการจัดการเรียนรู้ 15 สัปดาห์</div><div class="doc-desc">6 หน่วย &middot; ใบความรู้/ใบงาน/แบบทดสอบ &middot; PDF</div></div>
+        <div class="doc-go">&rarr;</div>
+      </a>
+      <a class="doc" href="docs/slides.pdf" target="_blank" rel="noopener">
+        <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4.5" width="19" height="12" rx="1.5"/><path d="M8 20h8M12 16.5V20"/></svg></div>
+        <div class="doc-body"><div class="doc-title">สไลด์นำเสนอกรรมการ</div><div class="doc-desc">28 สไลด์ &middot; PDF</div></div>
+        <div class="doc-go">&rarr;</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div>วิทยาลัยเทคนิคศรีสะเกษ &middot; สำนักงานคณะกรรมการการอาชีวศึกษา (สอศ.)</div>
+    <div class="sig">จัดทำโดย นายวีระวัฒน์ ภูสมหมาย &middot; นำเสนอต่อคณะกรรมการประเมินผลการพัฒนางาน &middot; ปีงบประมาณ พ.ศ. 2569</div>
+  </footer>
+
+</div>
+</body>
+</html>

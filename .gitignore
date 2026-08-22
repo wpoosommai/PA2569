@@ -1,0 +1,6 @@
+# Whitelist approach: ignore everything except the public site files
+*
+!/.gitignore
+!/index.html
+!/docs/
+!/docs/**
