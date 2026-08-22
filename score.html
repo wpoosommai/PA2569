@@ -215,6 +215,15 @@
     font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer;
   }
   .btn-ghost:hover { border-color: var(--gold-500); }
+  .btn-submit {
+    flex: 1 1 100%; text-align: center; padding: 0.75rem 1rem; border-radius: 10px;
+    border: 1px solid var(--navy-900); background: var(--navy-900); color: #EEF2FF;
+    font-family: inherit; font-size: 0.92rem; font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--navy-950); }
+  .btn-submit .gh-icon { width: 18px; height: 18px; flex: none; }
+  .submit-note { margin-top: 0.6rem; font-size: 0.78rem; color: var(--muted); text-align: center; }
 
   footer { margin-top: 2.4rem; padding: 1.4rem 1.5rem 0; text-align: center; color: var(--muted); font-size: 0.8rem; }
 
@@ -266,7 +275,7 @@
 
   <section>
     <div class="notice">
-      <strong>คำแนะนำ</strong> แตะเลือกระดับคะแนน 1&ndash;4 ในแต่ละข้อ ระบบจะรวมคะแนนให้ทันที ผลคะแนนนี้บันทึกไว้เฉพาะในเบราว์เซอร์ของท่าน (ยังไม่ถูกส่งหรือแชร์ไปที่ใด) กรุณาบันทึกผลคะแนนสุดท้ายลงในแบบประเมิน PA2 ฉบับทางราชการก่อนยื่นต่อ ก.ค.ศ.
+      <strong>คำแนะนำ</strong> แตะเลือกระดับคะแนน 1&ndash;4 ในแต่ละข้อ ระบบจะรวมคะแนนให้ทันที ผลคะแนนจะบันทึกไว้ในเบราว์เซอร์ของท่านระหว่างทำ เมื่อให้คะแนนครบแล้วกดปุ่ม <strong>&ldquo;ส่งคะแนนเข้า GitHub&rdquo;</strong> ด้านล่างเพื่อบันทึกผลอย่างถาวร (ต้องมีบัญชี GitHub) และยังควรบันทึกผลคะแนนสุดท้ายลงในแบบประเมิน PA2 ฉบับทางราชการก่อนยื่นต่อ ก.ค.ศ. ด้วย
     </div>
   </section>
 
@@ -643,6 +652,13 @@
       </table>
       <span id="pass-pill" class="pass-pill pending">ยังให้คะแนนไม่ครบ</span>
       <div class="toolbar">
+        <button type="button" class="btn-submit" id="btn-submit">
+          <svg class="gh-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 005.47 7.59c.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          ส่งคะแนนเข้า GitHub
+        </button>
+      </div>
+      <p class="submit-note">เปิดหน้าสร้าง Issue บน GitHub พร้อมกรอกคะแนนไว้ล่วงหน้า &middot; ต้องมีบัญชี GitHub และกด &ldquo;Submit new issue&rdquo; อีกครั้งเพื่อบันทึกจริง</p>
+      <div class="toolbar">
         <button type="button" class="btn-ghost" id="btn-print">พิมพ์ผลคะแนน</button>
         <button type="button" class="btn-ghost" id="btn-reset">ล้างคะแนนทั้งหมด</button>
       </div>
@@ -764,10 +780,78 @@
 
   var evName = document.getElementById('ev-name');
   var evRole = document.getElementById('ev-role');
-  evName.value = localStorage.getItem('pa2score_ev_name') || '';
-  evRole.value = localStorage.getItem('pa2score_ev_role') || '';
-  evName.addEventListener('input', function () { localStorage.setItem('pa2score_ev_name', evName.value); });
-  evRole.addEventListener('input', function () { localStorage.setItem('pa2score_ev_role', evRole.value); });
+  try {
+    evName.value = localStorage.getItem('pa2score_ev_name') || '';
+    evRole.value = localStorage.getItem('pa2score_ev_role') || '';
+  } catch (e) {}
+  evName.addEventListener('input', function () { try { localStorage.setItem('pa2score_ev_name', evName.value); } catch (e) {} });
+  evRole.addEventListener('input', function () { try { localStorage.setItem('pa2score_ev_role', evRole.value); } catch (e) {} });
+
+  var REPO = 'wpoosommai/PA2569';
+
+  function buildIssueData() {
+    var name = evName.value.trim() || '(ไม่ระบุชื่อ)';
+    var role = evRole.value.trim() || '(ไม่ระบุตำแหน่ง)';
+    var now = new Date();
+    var dateStr = now.toLocaleString('th-TH', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+    var part1 = 0, part1Max = 0, part2 = 0, part2Max = 0, answered = 0;
+    var rows1 = [], rows2 = [];
+
+    document.querySelectorAll('#part1 .score-item').forEach(function (el) {
+      var id = el.dataset.id, max = +el.dataset.max, level = state[id] || null;
+      var title = el.querySelector('.score-item-title').textContent.trim();
+      part1Max += max;
+      var pts = 0;
+      if (level) { pts = round1((level / 4) * max); part1 += pts; answered++; }
+      rows1.push('| ' + id + ' | ' + title + ' | ' + (level || '–') + ' | ' + (level ? fmt(pts) : '–') + ' / ' + max + ' |');
+    });
+    document.querySelectorAll('#part2 .score-item').forEach(function (el) {
+      var id = el.dataset.id, max = +el.dataset.max, level = state[id] || null;
+      var title = el.querySelector('.score-item-title').textContent.trim();
+      part2Max += max;
+      var pts = 0;
+      if (level) { pts = round1((level / 4) * max); part2 += pts; answered++; }
+      rows2.push('| ' + title + ' | ' + (level || '–') + ' | ' + (level ? fmt(pts) : '–') + ' / ' + max + ' |');
+    });
+
+    var total = part1 + part2;
+    var pct = total;
+    var totalItems = document.querySelectorAll('.score-item').length;
+    var complete = answered === totalItems;
+    var status = !complete ? '⚠️ ให้คะแนนไม่ครบ (' + answered + '/' + totalItems + ' ข้อ)'
+      : (pct >= 70 ? '✅ ผ่านเกณฑ์ (≥ ร้อยละ 70)' : '❌ ไม่ผ่านเกณฑ์ (< ร้อยละ 70)');
+
+    var body = '';
+    body += '**ผู้ประเมิน:** ' + name + '  \n';
+    body += '**ตำแหน่ง:** ' + role + '  \n';
+    body += '**วันที่ส่งคะแนน:** ' + dateStr + '  \n\n';
+    body += '### สรุปคะแนน\n\n';
+    body += '| ส่วน | คะแนน |\n|---|---|\n';
+    body += '| ส่วนที่ 1 &middot; ข้อตกลงตามมาตรฐานตำแหน่ง | ' + fmt(round1(part1)) + ' / ' + part1Max + ' |\n';
+    body += '| ส่วนที่ 2 &middot; ประเด็นท้าทาย | ' + fmt(round1(part2)) + ' / ' + part2Max + ' |\n';
+    body += '| **รวม** | **' + fmt(round1(total)) + ' / 100 (' + pct.toFixed(1) + '%)** |\n\n';
+    body += '**ผลการประเมิน:** ' + status + '\n\n';
+    body += '### รายละเอียด ส่วนที่ 1 &middot; ข้อตกลงตามมาตรฐานตำแหน่ง\n\n';
+    body += '| ข้อ | หัวข้อ | ระดับ | คะแนน |\n|---|---|---|---|\n' + rows1.join('\n') + '\n\n';
+    body += '### รายละเอียด ส่วนที่ 2 &middot; ประเด็นท้าทาย\n\n';
+    body += '| หัวข้อ | ระดับ | คะแนน |\n|---|---|---|\n' + rows2.join('\n') + '\n';
+
+    return {
+      title: 'คะแนนประเมิน PA2 - ' + name + ' - ' + now.toISOString().slice(0, 10),
+      body: body,
+      complete: complete
+    };
+  }
+
+  document.getElementById('btn-submit').addEventListener('click', function () {
+    var data = buildIssueData();
+    if (!data.complete) {
+      if (!confirm('ยังให้คะแนนไม่ครบทุกข้อ ต้องการส่งคะแนนเท่าที่มีอยู่หรือไม่?')) return;
+    }
+    var url = 'https://github.com/' + REPO + '/issues/new?title=' + encodeURIComponent(data.title) + '&labels=' + encodeURIComponent('pa2-score') + '&body=' + encodeURIComponent(data.body);
+    window.open(url, '_blank', 'noopener');
+  });
 
   renderAll();
 })();
