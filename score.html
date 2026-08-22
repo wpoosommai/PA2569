@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ให้คะแนน PA2 ออนไลน์</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --navy-950: #0B1530;
+    --navy-900: #16234A;
+    --navy-700: #2A3A66;
+    --gold-500: #C9A227;
+    --gold-300: #E4CD7C;
+    --ground: #F3F5FB;
+    --surface: #FFFFFF;
+    --surface-2: #EBEFF9;
+    --ink: #16203D;
+    --muted: #5B6B8C;
+    --line: #DDE3F0;
+    --good: #1E7A4C;
+    --good-bg: #E4F5EC;
+    --bad: #B3261E;
+    --bad-bg: #FBE3E1;
+    --heading-accent: #16234A;
+    --shadow: 0 1px 2px rgba(11,21,48,0.04), 0 8px 24px -12px rgba(11,21,48,0.18);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --navy-950: #060B1A;
+      --navy-900: #0F1830;
+      --navy-700: #2A3A66;
+      --gold-500: #D9B84A;
+      --gold-300: #EAD68A;
+      --ground: #0A1122;
+      --surface: #11192F;
+      --surface-2: #16214A;
+      --ink: #E7ECFB;
+      --muted: #90A0C8;
+      --line: #253055;
+      --good: #4ADE94;
+      --good-bg: #123324;
+      --bad: #FF6B6B;
+      --bad-bg: #3A1616;
+      --heading-accent: #EAD68A;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --navy-950: #060B1A;
+    --navy-900: #0F1830;
+    --navy-700: #2A3A66;
+    --gold-500: #D9B84A;
+    --gold-300: #EAD68A;
+    --ground: #0A1122;
+    --surface: #11192F;
+    --surface-2: #16214A;
+    --ink: #E7ECFB;
+    --muted: #90A0C8;
+    --line: #253055;
+    --good: #4ADE94;
+    --good-bg: #123324;
+    --bad: #FF6B6B;
+    --bad-bg: #3A1616;
+    --heading-accent: #EAD68A;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: 'Sarabun', 'TH SarabunPSK', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 5.2rem;
+  }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+  a { color: inherit; }
+
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 0 3rem; }
+
+  /* ---------- Header ---------- */
+  .head {
+    background: linear-gradient(165deg, var(--navy-900) 0%, var(--navy-950) 100%);
+    color: #EEF2FF;
+    padding: 1.6rem 1.5rem 1.8rem;
+    border-radius: 0 0 24px 24px;
+    box-shadow: var(--shadow);
+  }
+  .head-inner { max-width: 760px; margin: 0 auto; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.82rem; color: #C7D2EE; text-decoration: none;
+    margin-bottom: 0.9rem;
+  }
+  .back-link:hover { color: var(--gold-300); }
+  .eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-300);
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+  }
+  .head h1 { font-size: 1.4rem; font-weight: 700; line-height: 1.35; margin: 0 0 0.4rem; text-wrap: balance; }
+  .head .sub { color: #C7D2EE; font-size: 0.92rem; margin: 0; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 1.8rem 1.5rem 0; }
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem; }
+  h2 {
+    font-size: 1.02rem; font-weight: 700; color: var(--heading-accent);
+    margin: 0; display: flex; align-items: center; gap: 0.55rem;
+  }
+  h2 .num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--gold-500); font-weight: 600; }
+  h2 .max { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--muted); font-weight: 600; margin-left: auto; }
+  p { margin: 0 0 0.8rem; }
+  .lede { color: var(--muted); font-size: 0.92rem; }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 1.2rem 1.3rem; box-shadow: var(--shadow); }
+
+  /* Notice */
+  .notice {
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 14px;
+    padding: 0.9rem 1.1rem; font-size: 0.86rem; color: var(--muted); line-height: 1.55;
+  }
+  .notice strong { color: var(--ink); }
+
+  /* Evaluator info */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  @media (max-width: 480px) { .info-grid { grid-template-columns: 1fr; } }
+  .field label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.3rem; }
+  .field input {
+    width: 100%; padding: 0.6rem 0.7rem; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--ground); color: var(--ink);
+    font-family: inherit; font-size: 0.92rem;
+  }
+  .field input:focus { outline: 2px solid var(--gold-500); outline-offset: 1px; }
+
+  /* Legend */
+  .legend { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+  @media (max-width: 560px) { .legend { grid-template-columns: repeat(2, 1fr); } }
+  .legend-chip { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem 0.8rem; }
+  .legend-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--gold-500); font-size: 0.86rem; }
+  .legend-txt { font-size: 0.8rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* Area group */
+  .area-block { margin-bottom: 1.4rem; }
+  .area-block:last-child { margin-bottom: 0; }
+  .area-heading {
+    font-weight: 700; font-size: 0.92rem; color: var(--heading-accent);
+    margin: 0 0 0.7rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--line);
+  }
+  .item-list { display: flex; flex-direction: column; gap: 0.7rem; }
+
+  /* Score item */
+  .score-item {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 0.9rem 1rem;
+  }
+  .score-item-top { display: flex; align-items: flex-start; gap: 0.7rem; }
+  .score-item-id {
+    flex: none; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700;
+    color: var(--gold-500); background: color-mix(in srgb, var(--gold-500) 14%, transparent);
+    padding: 0.15rem 0.45rem; border-radius: 999px; margin-top: 0.1rem;
+  }
+  .score-item-title { flex: 1; font-weight: 600; font-size: 0.94rem; }
+  .score-item-pts { flex: none; text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 0.92rem; font-weight: 700; color: var(--muted); white-space: nowrap; }
+  .score-item-pts .pts-val { color: var(--heading-accent); }
+  .score-item-desc { margin-top: 0.5rem; }
+  .score-item-desc summary {
+    cursor: pointer; font-size: 0.8rem; color: var(--muted);
+    list-style: none; display: inline-flex; align-items: center; gap: 0.3rem;
+  }
+  .score-item-desc summary::-webkit-details-marker { display: none; }
+  .score-item-desc summary::before { content: "▸"; font-size: 0.7rem; color: var(--gold-500); transition: transform 0.15s ease; }
+  .score-item-desc[open] summary::before { transform: rotate(90deg); }
+  .score-item-desc p { margin: 0.5rem 0 0; font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+  .level-picker { display: flex; gap: 0.45rem; margin-top: 0.7rem; }
+  .level-btn {
+    flex: 1; padding: 0.5rem 0; border-radius: 9px; border: 1px solid var(--line);
+    background: var(--surface-2); color: var(--ink); font-weight: 700;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.92rem; cursor: pointer;
+    text-align: center; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .level-btn:hover { border-color: var(--gold-500); }
+  .level-btn[aria-pressed="true"] { background: var(--navy-900); border-color: var(--navy-900); color: #EEF2FF; }
+  .level-btn:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
+
+  /* Summary table */
+  .sum-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .sum-table td { padding: 0.55rem 0; border-bottom: 1px solid var(--line); }
+  .sum-table tr:last-child td { border-bottom: none; }
+  .sum-table td.pts { text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--heading-accent); white-space: nowrap; }
+  .sum-table tr.grand td { padding-top: 0.8rem; font-weight: 700; }
+  .sum-table tr.grand td.pts { font-size: 1.15rem; }
+
+  .pass-pill { display: inline-block; margin-top: 0.7rem; font-size: 0.82rem; font-weight: 700; padding: 0.3rem 0.7rem; border-radius: 999px; }
+  .pass-pill.pass { color: var(--good); background: var(--good-bg); }
+  .pass-pill.fail { color: var(--bad); background: var(--bad-bg); }
+  .pass-pill.pending { color: var(--muted); background: var(--surface-2); }
+
+  .toolbar { display: flex; gap: 0.7rem; margin-top: 1rem; flex-wrap: wrap; }
+  .btn-ghost {
+    flex: 1; min-width: 8rem; text-align: center; padding: 0.65rem 1rem; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    font-family: inherit; font-size: 0.88rem; font-weight: 600; cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--gold-500); }
+
+  footer { margin-top: 2.4rem; padding: 1.4rem 1.5rem 0; text-align: center; color: var(--muted); font-size: 0.8rem; }
+
+  /* ---------- Sticky total bar ---------- */
+  .sticky-bar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+    background: linear-gradient(165deg, var(--navy-900) 0%, var(--navy-950) 100%);
+    color: #EEF2FF;
+    padding: 0.75rem 1.2rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+    box-shadow: 0 -8px 24px -12px rgba(11,21,48,0.4);
+  }
+  .bar-label { font-size: 0.72rem; color: #B7C3E6; }
+  .bar-total { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; }
+  .bar-badge { font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 999px; margin-left: 0.5rem; }
+  .bar-badge.pass { background: var(--good-bg); color: var(--good); }
+  .bar-badge.fail { background: var(--bad-bg); color: var(--bad); }
+  .bar-badge.pending { background: rgba(255,255,255,0.14); color: #C7D2EE; }
+  .bar-print {
+    flex: none; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: #EEF2FF; padding: 0.5rem 0.9rem; border-radius: 9px; font-family: inherit;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  }
+  .bar-print:hover { background: rgba(255,255,255,0.18); }
+
+  @media print {
+    body { padding-bottom: 0; background: #fff; }
+    .sticky-bar, .back-link, .toolbar, .score-item-desc summary { display: none !important; }
+    .score-item-desc { display: block !important; }
+    .score-item-desc p { display: block !important; }
+    .head { border-radius: 0; }
+    .score-item { break-inside: avoid; }
+    section { padding: 1rem 0 0; }
+    .wrap { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="head-inner">
+      <a class="back-link" href="index.html">&larr; กลับหน้าสรุป</a>
+      <p class="eyebrow">แบบประเมินผลการพัฒนางานตามข้อตกลง &middot; PA 2 &middot; ปีงบประมาณ 2569</p>
+      <h1>ให้คะแนนออนไลน์ (สำหรับกรรมการผู้ประเมิน)</h1>
+      <p class="sub">นายวีระวัฒน์ ภูสมหมาย &middot; ครู วิทยฐานะครูชำนาญการพิเศษ &middot; รายวิชา 30105-2002 สมองกลฝังตัว</p>
+    </div>
+  </header>
+
+  <section>
+    <div class="notice">
+      <strong>คำแนะนำ</strong> แตะเลือกระดับคะแนน 1&ndash;4 ในแต่ละข้อ ระบบจะรวมคะแนนให้ทันที ผลคะแนนนี้บันทึกไว้เฉพาะในเบราว์เซอร์ของท่าน (ยังไม่ถูกส่งหรือแชร์ไปที่ใด) กรุณาบันทึกผลคะแนนสุดท้ายลงในแบบประเมิน PA2 ฉบับทางราชการก่อนยื่นต่อ ก.ค.ศ.
+    </div>
+  </section>
+
+  <section aria-labelledby="info-h">
+    <div class="section-head"><h2 id="info-h"><span class="num">ก.</span> ข้อมูลกรรมการผู้ประเมิน</h2></div>
+    <div class="card">
+      <div class="info-grid">
+        <div class="field"><label for="ev-name">ชื่อ&ndash;นามสกุล</label><input type="text" id="ev-name" placeholder="เช่น นายสมชาย ใจดี"></div>
+        <div class="field"><label for="ev-role">ตำแหน่ง</label><input type="text" id="ev-role" placeholder="เช่น ผู้อำนวยการสถานศึกษา"></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="legend-h">
+    <div class="section-head"><h2 id="legend-h"><span class="num">ข.</span> ระดับการให้คะแนน</h2></div>
+    <div class="legend">
+      <div class="legend-chip"><div class="legend-num">1</div><div class="legend-txt">ปฏิบัติได้ต่ำกว่าระดับฯ ที่คาดหวังมาก</div></div>
+      <div class="legend-chip"><div class="legend-num">2</div><div class="legend-txt">ปฏิบัติได้ต่ำกว่าระดับฯ ที่คาดหวัง</div></div>
+      <div class="legend-chip"><div class="legend-num">3</div><div class="legend-txt">ปฏิบัติได้ตามระดับฯ ที่คาดหวัง</div></div>
+      <div class="legend-chip"><div class="legend-num">4</div><div class="legend-txt">ปฏิบัติได้สูงกว่าระดับฯ ที่คาดหวัง</div></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="part1-h">
+    <div class="section-head"><h2 id="part1-h"><span class="num">ส่วนที่ 1</span> ข้อตกลงตามมาตรฐานตำแหน่ง <span class="max">เต็ม 60</span></h2></div>
+
+    <div id="part1">
+      <div class="area-block">
+        <div class="area-heading">1. ด้านการจัดการเรียนรู้</div>
+        <div class="item-list">
+
+          <div class="score-item" data-id="1.1" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.1</div>
+              <div class="score-item-title">สร้างและหรือพัฒนาหลักสูตร</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>ริเริ่ม พัฒนารายวิชาและหน่วยการเรียนรู้ ให้สอดคล้องกับมาตรฐานการเรียนรู้และตัวชี้วัด หรือผลการเรียนรู้ตามหลักสูตร บริบทของสถานศึกษา ผู้เรียน และท้องถิ่น สามารถแก้ไขปัญหาในการจัดการเรียนรู้ เพื่อให้ผู้เรียนได้พัฒนาสมรรถนะและการเรียนรู้เต็มตามศักยภาพ ส่งผลให้คุณภาพการจัดการเรียนรู้สูงขึ้น และเป็นแบบอย่างที่ดีในการสร้างและหรือพัฒนาหลักสูตร</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.1">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.2" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.2</div>
+              <div class="score-item-title">ออกแบบการจัดการเรียนรู้</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>ริเริ่ม คิดค้น การออกแบบการจัดการเรียนรู้ โดยเน้นผู้เรียนเป็นสำคัญ สามารถแก้ไขปัญหา และพัฒนาคุณภาพการจัดการเรียนรู้ให้สูงขึ้น เพื่อให้ผู้เรียนมีความรู้ ทักษะ คุณลักษณะประจำวิชา คุณลักษณะอันพึงประสงค์ และสมรรถนะที่สำคัญตามหลักสูตร มีกระบวนการคิดและค้นพบองค์ความรู้ด้วยตนเอง และสร้างแรงบันดาลใจ และเป็นแบบอย่างที่ดีในการออกแบบการจัดการเรียนรู้</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.2">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.3" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.3</div>
+              <div class="score-item-title">จัดกิจกรรมการเรียนรู้</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการริเริ่ม คิดค้น และพัฒนานวัตกรรมการจัดกิจกรรมการเรียนรู้ ที่สามารถแก้ไขปัญหาในการจัดการเรียนรู้ ทำให้ผู้เรียนได้พัฒนาเต็มตามศักยภาพ เรียนรู้และทำงานร่วมกัน มีกระบวนการคิดและค้นพบองค์ความรู้ด้วยตนเอง และสร้างแรงบันดาลใจและเป็นแบบอย่างที่ดีในการจัดกิจกรรมการเรียนรู้</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.3">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.4" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.4</div>
+              <div class="score-item-title">สร้างและหรือพัฒนาสื่อ นวัตกรรม เทคโนโลยีและแหล่งเรียนรู้</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการริเริ่ม คิดค้น และพัฒนาสื่อ นวัตกรรม เทคโนโลยีและแหล่งเรียนรู้ สอดคล้องกับกิจกรรมการเรียนรู้ สามารถแก้ไขปัญหาในการเรียนรู้ของผู้เรียน และทำให้ผู้เรียนมีทักษะการคิดและสามารถสร้างนวัตกรรมได้ และเป็นแบบอย่างที่ดีในการสร้างและหรือพัฒนาสื่อ นวัตกรรม เทคโนโลยีและแหล่งเรียนรู้</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.4">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.5" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.5</div>
+              <div class="score-item-title">วัดและประเมินผลการเรียนรู้</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการริเริ่ม คิดค้น และพัฒนารูปแบบการวัดและประเมินผลการเรียนรู้ตามสภาพจริง ด้วยวิธีการที่หลากหลายเหมาะสม และสอดคล้องกับมาตรฐานการเรียนรู้ และนำผลการวัดและประเมินผลการเรียนรู้มาใช้แก้ไขปัญหาการจัดการเรียนรู้ เพื่อให้ผู้เรียนพัฒนาการเรียนรู้อย่างต่อเนื่อง และเป็นแบบอย่างที่ดีในการวัดและประเมินผลการเรียนรู้</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.5">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.6" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.6</div>
+              <div class="score-item-title">ศึกษา วิเคราะห์ และสังเคราะห์ เพื่อแก้ไขปัญหาหรือพัฒนาการเรียนรู้</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการริเริ่ม คิดค้น วิเคราะห์ และสังเคราะห์ เพื่อแก้ไขปัญหาหรือพัฒนาการเรียนรู้ที่ส่งผลต่อคุณภาพผู้เรียน และนำผลการศึกษาวิเคราะห์และสังเคราะห์มาใช้แก้ไขปัญหาหรือพัฒนาคุณภาพการจัดการเรียนรู้ให้สูงขึ้น และเป็นแบบอย่างที่ดีในการศึกษา วิเคราะห์ และสังเคราะห์ เพื่อแก้ไขปัญหาหรือพัฒนาการเรียนรู้</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.6">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.7" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.7</div>
+              <div class="score-item-title">จัดบรรยากาศที่ส่งเสริมและพัฒนาผู้เรียน</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการริเริ่ม คิดค้น และพัฒนาการจัดบรรยากาศที่เหมาะสม สอดคล้องกับความแตกต่างของผู้เรียนเป็นรายบุคคล สามารถแก้ไขปัญหาการเรียนรู้ และสร้างแรงบันดาลใจส่งเสริมและพัฒนาผู้เรียนให้เกิดกระบวนการคิด ทักษะชีวิต ทักษะการทำงาน ทักษะการเรียนรู้และนวัตกรรม ทักษะด้านสารสนเทศ สื่อ และเทคโนโลยี และเป็นแบบอย่างที่ดีในการจัดบรรยากาศที่ส่งเสริมและพัฒนาผู้เรียน</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.7">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="1.8" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">1.8</div>
+              <div class="score-item-title">อบรมและพัฒนาคุณลักษณะที่ดีของผู้เรียน</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการอบรมบ่มนิสัยให้ผู้เรียนมีคุณธรรม จริยธรรม คุณลักษณะอันพึงประสงค์ และค่านิยมความเป็นไทยที่ดีงาม โดยริเริ่ม คิดค้น และพัฒนารูปแบบการดำเนินการที่มีประสิทธิภาพ คำนึงถึงความแตกต่างของผู้เรียนเป็นรายบุคคล และสามารถแก้ไขปัญหาและพัฒนาผู้เรียนได้ และเป็นแบบอย่างที่ดีในการอบรมและพัฒนาคุณลักษณะที่ดีของผู้เรียน</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 1.8">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="area-block">
+        <div class="area-heading">2. ด้านการส่งเสริมและสนับสนุนการจัดการเรียนรู้</div>
+        <div class="item-list">
+
+          <div class="score-item" data-id="2.1" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">2.1</div>
+              <div class="score-item-title">จัดทำข้อมูลสารสนเทศของผู้เรียนและรายวิชา</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการริเริ่ม คิดค้น และพัฒนารูปแบบการจัดทำข้อมูลสารสนเทศของผู้เรียนและรายวิชา ให้มีข้อมูลเป็นปัจจุบัน เพื่อใช้ในการส่งเสริมสนับสนุนการเรียนรู้ แก้ไขปัญหาและพัฒนาคุณภาพผู้เรียน และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 2.1">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="2.2" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">2.2</div>
+              <div class="score-item-title">ดำเนินการตามระบบดูแลช่วยเหลือผู้เรียน</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>มีการใช้ข้อมูลสารสนเทศเกี่ยวกับผู้เรียนรายบุคคล และประสานความร่วมมือกับผู้มีส่วนเกี่ยวข้อง เพื่อพัฒนาและแก้ไขปัญหาผู้เรียน และริเริ่มโครงการหรือจัดกิจกรรมเชิงสร้างสรรค์ด้วยวิธีการที่หลากหลายในการดูแลช่วยเหลือผู้เรียน และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 2.2">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="2.3" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">2.3</div>
+              <div class="score-item-title">ปฏิบัติงานวิชาการ และงานอื่น ๆ ของสถานศึกษา</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>ร่วมปฏิบัติงานทางวิชาการ และงานอื่น ๆ ของสถานศึกษา เพื่อยกระดับคุณภาพการจัดการศึกษาของสถานศึกษา โดยมีการพัฒนารูปแบบหรือแนวทางการดำเนินงานให้มีประสิทธิภาพสูงขึ้น และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 2.3">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="2.4" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">2.4</div>
+              <div class="score-item-title">ประสานความร่วมมือกับผู้ปกครอง ภาคีเครือข่าย และหรือสถานประกอบการ</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>การประสานความร่วมมือกับผู้ปกครอง ภาคีเครือข่าย และหรือสถานประกอบการ เพื่อร่วมกันแก้ไขปัญหาและพัฒนาผู้เรียน และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 2.4">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="area-block">
+        <div class="area-heading">3. ด้านการพัฒนาตนเองและวิชาชีพ</div>
+        <div class="item-list">
+
+          <div class="score-item" data-id="3.1" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">3.1</div>
+              <div class="score-item-title">พัฒนาตนเองอย่างเป็นระบบและต่อเนื่อง</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>เพื่อให้มีความรู้ ความสามารถ ทักษะ โดยเฉพาะอย่างยิ่งการใช้ภาษาไทยและภาษาอังกฤษเพื่อการสื่อสาร และการใช้เทคโนโลยีดิจิทัลเพื่อการศึกษา สมรรถนะวิชาชีพครูและความรอบรู้ในเนื้อหาวิชาและวิธีการสอน และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 3.1">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="3.2" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">3.2</div>
+              <div class="score-item-title">มีส่วนร่วม และเป็นผู้นำในการแลกเปลี่ยนเรียนรู้ทางวิชาชีพ</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>เพื่อแก้ไขปัญหาและสร้างนวัตกรรมเพื่อพัฒนาการจัดการเรียนรู้ และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 3.2">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+          <div class="score-item" data-id="3.3" data-max="4">
+            <div class="score-item-top">
+              <div class="score-item-id">3.3</div>
+              <div class="score-item-title">นำความรู้ ความสามารถ ทักษะที่ได้จากการพัฒนาตนเองและวิชาชีพมาใช้ในการพัฒนาการจัดการเรียนรู้</div>
+              <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 4</div>
+            </div>
+            <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+              <p>การพัฒนาคุณภาพผู้เรียน รวมถึงการพัฒนานวัตกรรมการจัดการเรียนรู้ที่มีผลต่อคุณภาพผู้เรียน และเป็นแบบอย่างที่ดี</p>
+            </details>
+            <div class="level-picker" role="group" aria-label="ให้คะแนนข้อ 3.3">
+              <button type="button" class="level-btn" data-level="1">1</button>
+              <button type="button" class="level-btn" data-level="2">2</button>
+              <button type="button" class="level-btn" data-level="3">3</button>
+              <button type="button" class="level-btn" data-level="4">4</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="part2-h">
+    <div class="section-head"><h2 id="part2-h"><span class="num">ส่วนที่ 2</span> ประเด็นท้าทายในการพัฒนาผลลัพธ์การเรียนรู้ <span class="max">เต็ม 40</span></h2></div>
+
+    <div id="part2" class="item-list">
+
+      <div class="score-item" data-id="II-1" data-max="20">
+        <div class="score-item-top">
+          <div class="score-item-id">1</div>
+          <div class="score-item-title">วิธีดำเนินการ</div>
+          <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 20</div>
+        </div>
+        <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+          <p>พิจารณาจากการดำเนินการที่ถูกต้อง ครบถ้วน เป็นไปตามระยะเวลาที่กำหนดไว้ในข้อตกลง และสะท้อนให้เห็นถึงระดับการปฏิบัติที่คาดหวังตามตำแหน่งและวิทยฐานะ</p>
+        </details>
+        <div class="level-picker" role="group" aria-label="ให้คะแนนวิธีดำเนินการ">
+          <button type="button" class="level-btn" data-level="1">1</button>
+          <button type="button" class="level-btn" data-level="2">2</button>
+          <button type="button" class="level-btn" data-level="3">3</button>
+          <button type="button" class="level-btn" data-level="4">4</button>
+        </div>
+      </div>
+
+      <div class="score-item" data-id="II-2" data-max="10">
+        <div class="score-item-top">
+          <div class="score-item-id">2.1</div>
+          <div class="score-item-title">ผลลัพธ์การเรียนรู้ของผู้เรียนที่คาดหวัง &middot; เชิงปริมาณ</div>
+          <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 10</div>
+        </div>
+        <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+          <p>พิจารณาจากการบรรลุเป้าหมายเชิงปริมาณได้ครบถ้วนตามข้อตกลง และมีความถูกต้อง เชื่อถือได้</p>
+        </details>
+        <div class="level-picker" role="group" aria-label="ให้คะแนนผลลัพธ์เชิงปริมาณ">
+          <button type="button" class="level-btn" data-level="1">1</button>
+          <button type="button" class="level-btn" data-level="2">2</button>
+          <button type="button" class="level-btn" data-level="3">3</button>
+          <button type="button" class="level-btn" data-level="4">4</button>
+        </div>
+      </div>
+
+      <div class="score-item" data-id="II-3" data-max="10">
+        <div class="score-item-top">
+          <div class="score-item-id">2.2</div>
+          <div class="score-item-title">ผลลัพธ์การเรียนรู้ของผู้เรียนที่คาดหวัง &middot; เชิงคุณภาพ</div>
+          <div class="score-item-pts"><span class="pts-val">&ndash;</span> / 10</div>
+        </div>
+        <details class="score-item-desc"><summary>เกณฑ์การพิจารณา</summary>
+          <p>พิจารณาจากการบรรลุเป้าหมายเชิงคุณภาพได้ครบถ้วน ถูกต้อง เชื่อถือได้ และปรากฏผลต่อคุณภาพผู้เรียนได้ตามข้อตกลง</p>
+        </details>
+        <div class="level-picker" role="group" aria-label="ให้คะแนนผลลัพธ์เชิงคุณภาพ">
+          <button type="button" class="level-btn" data-level="1">1</button>
+          <button type="button" class="level-btn" data-level="2">2</button>
+          <button type="button" class="level-btn" data-level="3">3</button>
+          <button type="button" class="level-btn" data-level="4">4</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section aria-labelledby="summary-h">
+    <div class="section-head"><h2 id="summary-h"><span class="num">ค.</span> สรุปผลคะแนน</h2></div>
+    <div class="card">
+      <table class="sum-table">
+        <tbody>
+          <tr><td>ส่วนที่ 1 &middot; ข้อตกลงตามมาตรฐานตำแหน่ง</td><td class="pts"><span id="sum-part1">0</span> / 60</td></tr>
+          <tr><td>ส่วนที่ 2 &middot; ประเด็นท้าทาย</td><td class="pts"><span id="sum-part2">0</span> / 40</td></tr>
+          <tr class="grand"><td>รวมทั้งหมด</td><td class="pts"><span id="sum-total">0</span> / 100 &middot; <span id="sum-pct">0.0</span>%</td></tr>
+        </tbody>
+      </table>
+      <span id="pass-pill" class="pass-pill pending">ยังให้คะแนนไม่ครบ</span>
+      <div class="toolbar">
+        <button type="button" class="btn-ghost" id="btn-print">พิมพ์ผลคะแนน</button>
+        <button type="button" class="btn-ghost" id="btn-reset">ล้างคะแนนทั้งหมด</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>วิทยาลัยเทคนิคศรีสะเกษ &middot; สำนักงานคณะกรรมการการอาชีวศึกษา (สอศ.)</div>
+    <div style="margin-top:0.3rem">เครื่องมือคำนวณคะแนนเบื้องต้น &middot; ปีงบประมาณ พ.ศ. 2569</div>
+  </footer>
+
+</div>
+
+<div class="sticky-bar">
+  <div>
+    <div class="bar-label">รวมคะแนน</div>
+    <div><span class="bar-total mono" id="bar-total">0 / 100</span><span class="bar-badge pending" id="bar-badge">ยังไม่ครบ</span></div>
+  </div>
+  <button type="button" class="bar-print" id="bar-print">พิมพ์</button>
+</div>
+
+<script>
+(function () {
+  var STORAGE_KEY = 'pa2score_v1';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) { state = {}; }
+
+  function round1(n) { return Math.round(n * 10) / 10; }
+  function fmt(n) { return Number.isInteger(n) ? String(n) : n.toFixed(1); }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function renderItem(el) {
+    var id = el.dataset.id, max = +el.dataset.max, level = state[id] || null;
+    el.querySelectorAll('.level-btn').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(+b.dataset.level === level));
+    });
+    var ptsEl = el.querySelector('.pts-val');
+    ptsEl.textContent = level ? fmt(round1((level / 4) * max)) : '–';
+  }
+
+  function recompute() {
+    var part1 = 0, part2 = 0;
+    var allItems = document.querySelectorAll('.score-item');
+    var answered = 0;
+    document.querySelectorAll('#part1 .score-item').forEach(function (el) {
+      var id = el.dataset.id, max = +el.dataset.max, level = state[id];
+      if (level) { part1 += (level / 4) * max; answered++; }
+    });
+    document.querySelectorAll('#part2 .score-item').forEach(function (el) {
+      var id = el.dataset.id, max = +el.dataset.max, level = state[id];
+      if (level) { part2 += (level / 4) * max; answered++; }
+    });
+    var total = part1 + part2;
+    var pct = total / 100 * 100;
+
+    document.getElementById('sum-part1').textContent = fmt(round1(part1));
+    document.getElementById('sum-part2').textContent = fmt(round1(part2));
+    document.getElementById('sum-total').textContent = fmt(round1(total));
+    document.getElementById('sum-pct').textContent = pct.toFixed(1);
+    document.getElementById('bar-total').textContent = fmt(round1(total)) + ' / 100';
+
+    var pill = document.getElementById('pass-pill');
+    var badge = document.getElementById('bar-badge');
+    var complete = answered === allItems.length;
+
+    if (!complete) {
+      pill.className = 'pass-pill pending';
+      pill.textContent = 'ให้คะแนนแล้ว ' + answered + ' / ' + allItems.length + ' ข้อ';
+      badge.className = 'bar-badge pending';
+      badge.textContent = answered + '/' + allItems.length + ' ข้อ';
+    } else if (pct >= 70) {
+      pill.className = 'pass-pill pass';
+      pill.textContent = 'ผ่านเกณฑ์ (≥ ร้อยละ 70)';
+      badge.className = 'bar-badge pass';
+      badge.textContent = 'ผ่านเกณฑ์';
+    } else {
+      pill.className = 'pass-pill fail';
+      pill.textContent = 'ไม่ผ่านเกณฑ์ (< ร้อยละ 70)';
+      badge.className = 'bar-badge fail';
+      badge.textContent = 'ไม่ผ่านเกณฑ์';
+    }
+  }
+
+  function renderAll() {
+    document.querySelectorAll('.score-item').forEach(renderItem);
+    recompute();
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.level-btn');
+    if (!btn) return;
+    var item = btn.closest('.score-item');
+    var id = item.dataset.id;
+    var level = +btn.dataset.level;
+    state[id] = state[id] === level ? null : level;
+    if (state[id] === null) delete state[id];
+    save();
+    renderItem(item);
+    recompute();
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', function () {
+    if (!confirm('ล้างคะแนนทั้งหมดที่ให้ไว้หรือไม่?')) return;
+    state = {};
+    save();
+    renderAll();
+  });
+
+  function doPrint() { window.print(); }
+  document.getElementById('btn-print').addEventListener('click', doPrint);
+  document.getElementById('bar-print').addEventListener('click', doPrint);
+
+  window.addEventListener('beforeprint', function () {
+    document.querySelectorAll('.score-item-desc').forEach(function (d) { d.open = true; });
+  });
+
+  var evName = document.getElementById('ev-name');
+  var evRole = document.getElementById('ev-role');
+  evName.value = localStorage.getItem('pa2score_ev_name') || '';
+  evRole.value = localStorage.getItem('pa2score_ev_role') || '';
+  evName.addEventListener('input', function () { localStorage.setItem('pa2score_ev_name', evName.value); });
+  evRole.addEventListener('input', function () { localStorage.setItem('pa2score_ev_role', evRole.value); });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

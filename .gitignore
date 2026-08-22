@@ -2,5 +2,6 @@
 *
 !/.gitignore
 !/index.html
+!/score.html
 !/docs/
 !/docs/**

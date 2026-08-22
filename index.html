@@ -231,6 +231,16 @@
   .score-table tr:last-child td { border-bottom: none; }
   .table-scroll { overflow-x: auto; }
   .criteria-note { margin-top: 0.9rem; font-size: 0.86rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 0.9rem; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--navy-900); color: #EEF2FF;
+    padding: 0.75rem 1.1rem; border-radius: 12px;
+    font-weight: 600; font-size: 0.92rem; text-decoration: none;
+    margin-top: 1rem;
+  }
+  .btn-primary:hover { background: var(--navy-950); }
+  .btn-primary:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
+  .btn-primary .arrow { color: var(--gold-300); }
 
   /* Documents */
   .doc-list { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -387,6 +397,7 @@
         </table>
       </div>
       <p class="criteria-note">เกณฑ์ผ่าน: คะแนนจากกรรมการแต่ละคน ไม่ต่ำกว่าร้อยละ 70 &middot; รวมเต็ม 100 คะแนน</p>
+      <a class="btn-primary" href="score.html">ให้คะแนนออนไลน์ (สำหรับกรรมการ) <span class="arrow">&rarr;</span></a>
     </div>
   </section>
 
