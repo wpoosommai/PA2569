@@ -657,7 +657,7 @@
           ส่งคะแนนเข้า GitHub
         </button>
       </div>
-      <p class="submit-note">เปิดหน้าสร้าง Issue บน GitHub พร้อมกรอกคะแนนไว้ล่วงหน้า &middot; ต้องมีบัญชี GitHub และกด &ldquo;Submit new issue&rdquo; อีกครั้งเพื่อบันทึกจริง</p>
+      <p class="submit-note">เปิดหน้าสร้าง Issue บน GitHub พร้อมกรอกคะแนนสรุปไว้ล่วงหน้า (รายละเอียดรายข้อจะถูกคัดลอกไว้ในคลิปบอร์ดให้วางเพิ่มเอง) &middot; ต้องมีบัญชี GitHub และกด &ldquo;Submit new issue&rdquo; อีกครั้งเพื่อบันทึกจริง</p>
       <div class="toolbar">
         <button type="button" class="btn-ghost" id="btn-print">พิมพ์ผลคะแนน</button>
         <button type="button" class="btn-ghost" id="btn-reset">ล้างคะแนนทั้งหมด</button>
@@ -822,24 +822,30 @@
     var status = !complete ? '⚠️ ให้คะแนนไม่ครบ (' + answered + '/' + totalItems + ' ข้อ)'
       : (pct >= 70 ? '✅ ผ่านเกณฑ์ (≥ ร้อยละ 70)' : '❌ ไม่ผ่านเกณฑ์ (< ร้อยละ 70)');
 
-    var body = '';
-    body += '**ผู้ประเมิน:** ' + name + '  \n';
-    body += '**ตำแหน่ง:** ' + role + '  \n';
-    body += '**วันที่ส่งคะแนน:** ' + dateStr + '  \n\n';
-    body += '### สรุปคะแนน\n\n';
-    body += '| ส่วน | คะแนน |\n|---|---|\n';
-    body += '| ส่วนที่ 1 · ข้อตกลงตามมาตรฐานตำแหน่ง | ' + fmt(round1(part1)) + ' / ' + part1Max + ' |\n';
-    body += '| ส่วนที่ 2 · ประเด็นท้าทาย | ' + fmt(round1(part2)) + ' / ' + part2Max + ' |\n';
-    body += '| **รวม** | **' + fmt(round1(total)) + ' / 100 (' + pct.toFixed(1) + '%)** |\n\n';
-    body += '**ผลการประเมิน:** ' + status + '\n\n';
-    body += '### รายละเอียด ส่วนที่ 1 · ข้อตกลงตามมาตรฐานตำแหน่ง\n\n';
-    body += '| ข้อ | หัวข้อ | ระดับ | คะแนน |\n|---|---|---|---|\n' + rows1.join('\n') + '\n\n';
-    body += '### รายละเอียด ส่วนที่ 2 · ประเด็นท้าทาย\n\n';
-    body += '| หัวข้อ | ระดับ | คะแนน |\n|---|---|---|\n' + rows2.join('\n') + '\n';
+    // Short body only — GitHub's issues/new URL has a hard length limit, and a
+    // full 18-row breakdown pushed the encoded URL past it ("URL too long").
+    var shortBody = '';
+    shortBody += '**ผู้ประเมิน:** ' + name + '  \n';
+    shortBody += '**ตำแหน่ง:** ' + role + '  \n';
+    shortBody += '**วันที่ส่งคะแนน:** ' + dateStr + '  \n\n';
+    shortBody += '| ส่วน | คะแนน |\n|---|---|\n';
+    shortBody += '| ส่วนที่ 1 · ข้อตกลงตามมาตรฐานตำแหน่ง | ' + fmt(round1(part1)) + ' / ' + part1Max + ' |\n';
+    shortBody += '| ส่วนที่ 2 · ประเด็นท้าทาย | ' + fmt(round1(part2)) + ' / ' + part2Max + ' |\n';
+    shortBody += '| **รวม** | **' + fmt(round1(total)) + ' / 100 (' + pct.toFixed(1) + '%)** |\n\n';
+    shortBody += '**ผลการประเมิน:** ' + status + '\n\n';
+    shortBody += '_รายละเอียดคะแนนรายข้อทั้ง 18 ข้อถูกคัดลอกไว้ในคลิปบอร์ดแล้ว — วาง (Ctrl+V) เพิ่มในกล่องนี้หรือในคอมเมนต์ได้_';
+
+    // Full breakdown — copied to clipboard instead of embedded in the URL.
+    var fullBody = shortBody.replace(/\n\n_รายละเอียด[^]*$/, '');
+    fullBody += '\n\n### รายละเอียด ส่วนที่ 1 · ข้อตกลงตามมาตรฐานตำแหน่ง\n\n';
+    fullBody += '| ข้อ | หัวข้อ | ระดับ | คะแนน |\n|---|---|---|---|\n' + rows1.join('\n') + '\n\n';
+    fullBody += '### รายละเอียด ส่วนที่ 2 · ประเด็นท้าทาย\n\n';
+    fullBody += '| หัวข้อ | ระดับ | คะแนน |\n|---|---|---|\n' + rows2.join('\n') + '\n';
 
     return {
       title: 'คะแนนประเมิน PA2 - ' + name + ' - ' + now.toISOString().slice(0, 10),
-      body: body,
+      shortBody: shortBody,
+      fullBody: fullBody,
       complete: complete
     };
   }
@@ -849,7 +855,10 @@
     if (!data.complete) {
       if (!confirm('ยังให้คะแนนไม่ครบทุกข้อ ต้องการส่งคะแนนเท่าที่มีอยู่หรือไม่?')) return;
     }
-    var url = 'https://github.com/' + REPO + '/issues/new?title=' + encodeURIComponent(data.title) + '&labels=' + encodeURIComponent('pa2-score') + '&body=' + encodeURIComponent(data.body);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(data.fullBody).catch(function () {});
+    }
+    var url = 'https://github.com/' + REPO + '/issues/new?title=' + encodeURIComponent(data.title) + '&labels=' + encodeURIComponent('pa2-score') + '&body=' + encodeURIComponent(data.shortBody);
     window.open(url, '_blank', 'noopener');
   });
 
